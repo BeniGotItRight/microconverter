@@ -3,18 +3,37 @@
 from pathlib import Path
 
 FORMAT_MAP = {
-    ".pdf": [".docx", ".xlsx"],
-    ".docx": [".pdf"],
+    # Documents
+    ".pdf": [".docx", ".xlsx", ".txt"],
+    ".docx": [".pdf", ".txt"],
     ".txt": [".pdf"],
-    ".jpg": [".png", ".pdf"],
-    ".jpeg": [".png", ".pdf"],
-    ".png": [".jpg", ".jpeg", ".pdf"],
-    ".csv": [".xlsx"],
+    ".pptx": [".pdf"],
+    ".html": [".pdf"],
+    ".htm": [".pdf"],
+    ".md": [".pdf", ".html"],
+    ".rtf": [".pdf", ".txt"],
+    ".odt": [".pdf", ".txt"],
+    # Images
+    ".jpg": [".png", ".webp", ".pdf"],
+    ".jpeg": [".png", ".webp", ".pdf"],
+    ".png": [".jpg", ".webp", ".pdf"],
+    ".webp": [".png", ".jpg", ".pdf"],
+    ".bmp": [".png", ".jpg"],
+    ".tiff": [".png", ".jpg"],
+    ".tif": [".png", ".jpg"],
+    ".gif": [".png", ".jpg"],
+    ".ico": [".png"],
+    # Data
+    ".csv": [".xlsx", ".pdf"],
     ".xlsx": [".csv", ".pdf"],
     ".xls": [".csv", ".pdf"],
+    ".json": [".csv", ".xlsx", ".pdf", ".yaml"],
+    ".xml": [".csv", ".xlsx", ".json"],
+    ".yaml": [".json", ".csv", ".xlsx"],
+    ".yml": [".json", ".csv", ".xlsx"],
 }
 
-# Human-readable format labels for dropdown
+# Human-readable format labels
 FORMAT_LABELS = {
     ".docx": "Word (.docx)",
     ".pdf": "PDF (.pdf)",
@@ -23,6 +42,23 @@ FORMAT_LABELS = {
     ".png": "PNG (.png)",
     ".jpg": "JPG (.jpg)",
     ".jpeg": "JPG (.jpeg)",
+    ".webp": "WebP (.webp)",
+    ".bmp": "BMP (.bmp)",
+    ".tiff": "TIFF (.tiff)",
+    ".tif": "TIFF (.tif)",
+    ".gif": "GIF (.gif)",
+    ".ico": "ICO (.ico)",
+    ".txt": "Text (.txt)",
+    ".html": "HTML (.html)",
+    ".htm": "HTML (.htm)",
+    ".md": "Markdown (.md)",
+    ".rtf": "RTF (.rtf)",
+    ".odt": "ODT (.odt)",
+    ".pptx": "PowerPoint (.pptx)",
+    ".json": "JSON (.json)",
+    ".xml": "XML (.xml)",
+    ".yaml": "YAML (.yaml)",
+    ".yml": "YAML (.yml)",
 }
 
 

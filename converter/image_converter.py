@@ -1,4 +1,4 @@
-"""Image conversions: JPG, PNG, Image to PDF."""
+"""Image conversions: JPG, PNG, WEBP, BMP, TIFF, GIF, ICO, Image to PDF."""
 
 from pathlib import Path
 
@@ -26,14 +26,19 @@ def convert_image(
     input_path: Path, output_path: Path, target_ext: str
 ) -> None:
     """
-    Convert between image formats (JPG/PNG) or image to PDF.
-    Uses high-quality settings for best output.
-    PNG transparency is composited onto white when converting to PDF or JPG.
+    Convert between image formats or image to PDF.
+    Supports: JPG, JPEG, PNG, WEBP, BMP, TIFF, TIF, GIF, ICO.
+    PNG/WEBP transparency is composited onto white when converting to JPG or PDF.
     """
     img = Image.open(input_path)
     target_ext = target_ext.lower()
 
-    if target_ext in (".jpg", ".jpeg") or target_ext == ".pdf":
+    # For GIF, take the first frame
+    if getattr(img, "is_animated", False):
+        img.seek(0)
+
+    # Ensure RGB for formats that don't support transparency
+    if target_ext in (".jpg", ".jpeg", ".bmp", ".pdf"):
         img = _ensure_rgb(img)
 
     if target_ext in (".jpg", ".jpeg"):
@@ -45,14 +50,41 @@ def convert_image(
             progressive=True,
         )
     elif target_ext == ".png":
+        # Keep RGBA if source has it
+        if img.mode not in ("RGB", "RGBA", "L", "LA", "P"):
+            img = img.convert("RGBA")
         img.save(
             output_path,
             "PNG",
             optimize=True,
             compress_level=6,
         )
+    elif target_ext == ".webp":
+        img.save(
+            output_path,
+            "WEBP",
+            quality=90,
+            method=4,
+        )
+    elif target_ext == ".bmp":
+        img = _ensure_rgb(img)
+        img.save(output_path, "BMP")
+    elif target_ext in (".tiff", ".tif"):
+        img.save(output_path, "TIFF", compression="tiff_lzw")
+    elif target_ext == ".gif":
+        # Convert to palette mode for GIF
+        if img.mode == "RGBA":
+            bg = Image.new("RGB", img.size, (255, 255, 255))
+            bg.paste(img, mask=img.split()[-1])
+            img = bg
+        img = img.convert("P", palette=Image.ADAPTIVE, colors=256)
+        img.save(output_path, "GIF")
+    elif target_ext == ".ico":
+        img = _ensure_rgb(img)
+        # ICO typically needs small sizes
+        img.thumbnail((256, 256), Image.LANCZOS)
+        img.save(output_path, "ICO", sizes=[(img.width, img.height)])
     elif target_ext == ".pdf":
-        # Pillow saves images as PDF with embedded raster
         img.save(
             output_path,
             "PDF",
