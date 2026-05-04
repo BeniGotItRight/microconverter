@@ -126,7 +126,7 @@ def show_smart_advice(title, message, advice_type="info"):
     </div>
     """, unsafe_allow_html=True)
 
-# Sidebar with Collapsible Info
+# Sidebar
 with st.sidebar:
     st.markdown('<div style="font-size: 2.25rem; font-weight: 800; color: #10b981; margin-bottom: 1.5rem; letter-spacing:-0.03em;">CONVERTEX</div>', unsafe_allow_html=True)
     
@@ -158,7 +158,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# Main Header
+# Main
 st.markdown('<h1 style="color:white; font-size:3rem; font-weight:800; margin-bottom:0;">Convertex</h1>', unsafe_allow_html=True)
 st.markdown('<p style="color:#64748b; font-size:1.2rem; margin-bottom:2.5rem;">Smart Engine by LexcoreTech & Benson Motari</p>', unsafe_allow_html=True)
 
@@ -181,10 +181,10 @@ with col2:
     allowed = [ext_mapping[e] for e in source_exts if e in ext_mapping]
     uploaded_file = st.file_uploader("Upload", type=allowed, label_visibility="collapsed")
 
-    # SMART ADVANCED OPTIONS (NOW COLLAPSIBLE AGAIN)
+    # SMART ADVANCED OPTIONS
     encoding, delimiter, pages, password = None, None, None, None
     with st.expander("⚙️ SMART ADVANCED OPTIONS", expanded=False):
-        st.info("Only change these if the default conversion doesn't meet your needs.")
+        st.info("Use these to fix issues like messy columns, weird symbols, or encrypted PDFs.")
         c1, c2 = st.columns(2)
         with c1:
             if any(e in (".csv", ".json", ".xml", ".yaml") for e in source_exts):
@@ -234,6 +234,7 @@ with col2:
     with st.expander("📖 COMPREHENSIVE FORMAT GUIDE & ADVICE", expanded=False):
         st.markdown("""
         ### 🧐 When to use which format?
+        
         #### **1. Documents**
         *   **PDF:** Final contracts and invoices. Professional and universal.
         *   **Word (.docx):** Collaborative drafts and text editing.
@@ -245,14 +246,15 @@ with col2:
         *   **JSON:** Developer integrations and web data.
         
         #### **3. Images**
-        *   **WebP:** Best for websites. Tiny file size, high quality.
+        *   **WebP:** **(Highly Recommended)** Best for websites. Tiny file size, high quality.
         *   **PNG:** Logos/Icons with transparency.
         *   **JPG:** High-quality photographs.
         
         ### 🛠 How Convertex helps you?
-        1. **Privacy:** LexcoreTech Military-grade local silos.
-        2. **Accuracy:** Smart Engine fixes broken data formats.
-        3. **Freedom:** Unlimited conversions, zero subscriptions.
+        1.  **Privacy:** LexcoreTech Military-grade local silos ensure your files never leak.
+        2.  **Accuracy:** Smart Engine fixes broken data formats and table structures automatically.
+        3.  **Freedom:** Unlimited conversions with zero subscriptions.
+        4.  **Troubleshooting (Advanced Options):** Use these to fix "difficult" files. If a CSV looks messy, adjust the **Delimiter**. If a PDF is protected, use the **Password** field. It puts the power in your hands.
         """)
 
 # Footer
