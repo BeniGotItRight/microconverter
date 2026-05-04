@@ -63,7 +63,7 @@ CONVERSION_INFO = {
 # Page config
 st.set_page_config(
     page_title="Convertex - Hamo & Associates",
-    page_icon="⚡",
+    page_icon="assets/hamo_logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -81,7 +81,14 @@ st.markdown("""
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0f172a 0%, #020617 100%) !important;
     }
-    .sb-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
+    [data-testid="stSidebar"] [data-testid="stImage"] {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        margin: 0 auto 1.5rem auto;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .sb-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
     .sb-label { font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.75rem; display: block; }
     .sb-feature { font-size: 0.85rem; color: #94a3b8; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
 
@@ -109,17 +116,19 @@ st.markdown("""
         text-decoration: none;
         font-weight: 700;
         font-size: 0.85rem;
+        transition: background 0.2s ease;
     }
+    .advice-btn:hover { background: rgba(16, 185, 129, 0.2); }
 
     /* Hero & Client Header */
     .hero-box {
         padding: 3rem 2rem;
-        background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+        background: linear-gradient(135deg, #064e3b 0%, #0d9468 50%, #10b981 100%);
         border-radius: 24px;
         margin-bottom: 2.5rem;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
-        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(255,255,255,0.08);
     }
     .hero-title { font-size: 3.5rem; font-weight: 800; color: white; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
     .haas-linking {
@@ -134,16 +143,46 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(110, 231, 183, 0.3);
     }
     .logo-container {
-        background: white;
-        padding: 1rem;
-        border-radius: 15px;
+        background: #ffffff;
+        padding: 1.25rem 2.5rem;
+        border-radius: 20px;
         display: inline-block;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        margin-bottom: 2rem;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f1a; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
     /* Footer */
     .footer-box { text-align: center; padding: 4rem 0 2rem; border-top: 1px solid #1e293b; margin-top: 4rem; }
+
+    /* Upload area polish */
+    [data-testid="stFileUploader"] {
+        border-radius: 14px;
+    }
+    
+    /* Button refinements */
+    .stButton > button[kind="primary"] {
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.02em;
+    }
+    
+    /* Download button */
+    .stDownloadButton > button {
+        border-radius: 12px !important;
+    }
+    
+    /* Expander styling */
+    [data-testid="stExpander"] {
+        border-radius: 12px;
+        border-color: rgba(255,255,255,0.06) !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -159,7 +198,6 @@ def show_smart_advice(title, message, advice_type="info"):
 
 # Sidebar with Logo
 with st.sidebar:
-    # Attempt to show logo
     logo_path = Path("assets/hamo_logo.png")
     if logo_path.exists():
         st.image(str(logo_path), use_container_width=True)
@@ -205,10 +243,13 @@ else:
 
 st.markdown("""
     <div class="hero-title">Convertex</div>
-    <div style="color:rgba(255,255,255,0.9); font-size:1.2rem; font-weight:600;">The World's Best Micro-SaaS File Converter</div>
+    <div style="color:rgba(255,255,255,0.9); font-size:1.3rem; font-weight:600; letter-spacing: 0.01em;">Enterprise-Grade File Transformation Suite</div>
     <div class="haas-linking">
-        🔄 Future Integration: HAAS 2.0<br>
-        <span style="font-size:0.8rem; opacity:0.8; font-weight:500;">A more comprehensive and powerful version for complex financial orchestration.</span>
+        <span style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+            <span style="background: #064e3b; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">PREVIEW</span>
+            Next-Gen HAAS 2.0 Integration
+        </span>
+        <div style="font-size:0.8rem; opacity:0.8; font-weight:500; margin-top: 4px;">Advanced financial orchestration and automated reporting engine.</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
