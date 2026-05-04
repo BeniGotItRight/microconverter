@@ -260,13 +260,7 @@ with st.sidebar:
 
 # Main Hero Header
 st.markdown('<div class="hero-box">', unsafe_allow_html=True)
-if logo_path.exists():
-    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-    # Reduced to a more standard hero logo size
-    st.image(str(logo_path), width=180)
-    st.markdown('</div>', unsafe_allow_html=True)
-else:
-    st.markdown('<div style="font-size: 1rem; font-weight: 700; color: #d1fae5; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;">Hamo & Associates Professional Suite</div>', unsafe_allow_html=True)
+st.markdown('<div style="font-size: 1rem; font-weight: 700; color: #d1fae5; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;">Hamo & Associates Professional Suite</div>', unsafe_allow_html=True)
 
 st.markdown("""
     <div class="hero-title">Convertex</div>
