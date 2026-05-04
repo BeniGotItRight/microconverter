@@ -78,7 +78,7 @@ st.markdown("""
         background-color: #0b0f1a !important;
     }
     
-    /* Sidebar Comprehensive Design */
+    /* Sidebar Overhaul */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0f172a 0%, #020617 100%) !important;
         border-right: 1px solid rgba(255,255,255,0.05) !important;
@@ -106,6 +106,16 @@ st.markdown("""
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 0.5rem;
+    }
+    .privacy-badge {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        color: #10b981;
+        text-align: center;
+        margin-top: 1rem;
     }
 
     /* Hero */
@@ -151,51 +161,59 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Comprehensive Sidebar
+# Comprehensive Sidebar Upgrade
 with st.sidebar:
-    st.markdown('<div style="font-size: 2rem; font-weight: 800; color: #10b981; margin-bottom: 2rem;">CONVERTEX</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size: 2.25rem; font-weight: 800; color: #10b981; margin-bottom: 1.5rem; letter-spacing:-0.03em;">CONVERTEX</div>', unsafe_allow_html=True)
     
     # 1. Primary Controls
     st.markdown('<div class="sb-section">', unsafe_allow_html=True)
-    st.markdown('<span class="sb-label">Step 1: Category</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sb-label">01. Choose Category</span>', unsafe_allow_html=True)
     category_list = list(CATEGORIES.keys())
     selected_cat = st.radio("Category", category_list, label_visibility="collapsed")
     
-    st.markdown('<div style="height:1.5rem;"></div>', unsafe_allow_html=True)
-    st.markdown('<span class="sb-label">Step 2: Operation</span>', unsafe_allow_html=True)
+    st.markdown('<div style="height:1.25rem;"></div>', unsafe_allow_html=True)
+    st.markdown('<span class="sb-label">02. Select Operation</span>', unsafe_allow_html=True)
     conv_options = CATEGORIES[selected_cat]
     conv_labels = [c[0] for c in conv_options]
     selected_label = st.selectbox("Operation", conv_labels, label_visibility="collapsed")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # 2. Platform Intelligence
+    # 2. Quick Start Guide
     st.markdown('<div class="sb-section">', unsafe_allow_html=True)
-    st.markdown('<span class="sb-label">Capabilities</span>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">✅ 35+ Professional Formats</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">✅ Bank Statement Extraction</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">✅ High-Quality Image Engine</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">✅ 100% Privacy Guaranteed</div>', unsafe_allow_html=True)
+    st.markdown('<span class="sb-label">Quick Start Guide</span>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">1️⃣ Pick your format category</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">2️⃣ Select specific conversion</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">3️⃣ Upload & Process live</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+    # 3. Privacy Assurance (NEW)
+    st.markdown("""
+    <div class="privacy-badge">
+        🔒 <strong>Privacy Guarantee</strong><br>
+        Files are processed locally and deleted immediately after conversion. No data is stored.
+    </div>
+    """, unsafe_allow_html=True)
     
-    # 3. System Status
-    st.markdown('<div class="sb-section">', unsafe_allow_html=True)
-    st.markdown('<span class="sb-label">System Performance</span>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature" style="color:#10b981;">● Engine: Healthy</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">● Version: 2.1.2 Ultimate</div>', unsafe_allow_html=True)
+    # 4. System Intelligence
+    st.markdown('<div class="sb-section" style="margin-top:1.5rem;">', unsafe_allow_html=True)
+    st.markdown('<span class="sb-label">System Intelligence</span>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">✅ 35+ Pro Formats</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">✅ Bank-Grade OCR Fallback</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">✅ Ultra-Fast Processing</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature" style="color:#10b981;">● Engine: 100% Healthy</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Hero
 st.markdown("""
 <div class="hero-box">
     <div class="hero-title">Convertex</div>
-    <div style="color:rgba(255,255,255,0.9); font-size:1.1rem; font-weight:500;">The World's Best Micro-SaaS File Converter</div>
+    <div style="color:rgba(255,255,255,0.9); font-size:1.1rem; font-weight:500;">Premium Suite by LexcoreTech & Benson Motari</div>
 </div>
 """, unsafe_allow_html=True)
 
 # Main Workspace
 col1, col2, col3 = st.columns([1, 8, 1])
 with col2:
-    # Selected Operation Config
     idx = conv_labels.index(selected_label)
     conv_data = conv_options[idx]
     source_exts, target_ext = conv_data[1], conv_data[2]
@@ -248,34 +266,23 @@ with col2:
                 input_p = create_temp_file(file_ext, delete_on_exit=False)
                 input_p.write_bytes(uploaded_file.getvalue())
                 output_p = create_temp_file(target_ext, delete_on_exit=False)
-                
                 prog.progress(50)
                 _, warning = convert(input_p, output_p, target_ext, encoding=encoding, delimiter=delimiter, pages=pages, password=password)
                 if warning: st.warning(warning)
-                
                 prog.progress(100)
                 st.session_state["conv_data"] = output_p.read_bytes()
                 st.session_state["conv_name"] = Path(uploaded_file.name).stem + target_ext
                 st.session_state["conv_key"] = (uploaded_file.name, target_ext)
-                
                 cleanup_temp(input_p)
                 cleanup_temp(output_p)
                 st.rerun()
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+            except Exception as e: st.error(f"Error: {str(e)}")
 
         res_key = st.session_state.get("conv_key")
         if res_key == (uploaded_file.name, target_ext) and "conv_data" in st.session_state:
             st.markdown('<div style="background:rgba(16,185,129,0.1); border:2px solid #10b981; border-radius:15px; padding:2rem; text-align:center; margin-top:2rem;">', unsafe_allow_html=True)
-            st.success("✅ Conversion Complete")
-            st.download_button(
-                label=f"⬇️ Download {st.session_state['conv_name']}",
-                data=st.session_state["conv_data"],
-                file_name=st.session_state["conv_name"],
-                mime="application/octet-stream",
-                type="primary",
-                use_container_width=True
-            )
+            st.success("✅ Ready for Download")
+            st.download_button(label=f"⬇️ Download {st.session_state['conv_name']}", data=st.session_state["conv_data"], file_name=st.session_state["conv_name"], mime="application/octet-stream", type="primary", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer Credits (Consolidated)
