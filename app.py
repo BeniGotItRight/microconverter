@@ -1,5 +1,5 @@
 """
-Convertex - The World's Best File Converter
+Convertex - Hamo & Associates
 By LexcoreTech & Benson Motari
 """
 
@@ -62,7 +62,7 @@ CONVERSION_INFO = {
 
 # Page config
 st.set_page_config(
-    page_title="Convertex - Hamo Associates",
+    page_title="Convertex - Hamo & Associates",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -121,25 +121,25 @@ st.markdown("""
         box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
         border: 1px solid rgba(255,255,255,0.1);
     }
-    .client-header {
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: #d1fae5;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        margin-bottom: 1rem;
-        opacity: 0.9;
-    }
     .hero-title { font-size: 3.5rem; font-weight: 800; color: white; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
     .haas-linking {
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: 0.9rem;
+        font-weight: 700;
         color: #064e3b;
         background: #6ee7b7;
-        padding: 0.4rem 1rem;
+        padding: 0.6rem 1.5rem;
         border-radius: 50px;
         display: inline-block;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 15px rgba(110, 231, 183, 0.3);
+    }
+    .logo-container {
+        background: white;
+        padding: 1rem;
+        border-radius: 15px;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     }
     
     /* Footer */
@@ -157,9 +157,14 @@ def show_smart_advice(title, message, advice_type="info"):
     </div>
     """, unsafe_allow_html=True)
 
-# Sidebar
+# Sidebar with Logo
 with st.sidebar:
-    st.markdown('<div style="font-size: 2.25rem; font-weight: 800; color: #10b981; margin-bottom: 1.5rem; letter-spacing:-0.03em;">CONVERTEX</div>', unsafe_allow_html=True)
+    # Attempt to show logo
+    logo_path = Path("assets/hamo_logo.png")
+    if logo_path.exists():
+        st.image(str(logo_path), use_container_width=True)
+    else:
+        st.markdown('<div style="font-size: 1.5rem; font-weight: 800; color: #10b981; margin-bottom: 1.5rem; text-align:center;">HAMO & ASSOCIATES</div>', unsafe_allow_html=True)
     
     st.markdown('<div class="sb-section"><span class="sb-label">01. Workflow Category</span>', unsafe_allow_html=True)
     category_list = list(CATEGORIES.keys())
@@ -190,12 +195,21 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # Main Hero Header
-st.markdown(f"""
-<div class="hero-box">
-    <div class="client-header">Exclusively Crafted For Hamo Associates</div>
+st.markdown('<div class="hero-box">', unsafe_allow_html=True)
+if logo_path.exists():
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+    st.image(str(logo_path), width=250)
+    st.markdown('</div>', unsafe_allow_html=True)
+else:
+    st.markdown('<div style="font-size: 1rem; font-weight: 700; color: #d1fae5; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;">Hamo & Associates Professional Suite</div>', unsafe_allow_html=True)
+
+st.markdown("""
     <div class="hero-title">Convertex</div>
-    <div style="color:rgba(255,255,255,0.9); font-size:1.1rem; font-weight:500;">The World's Best Micro-SaaS File Converter</div>
-    <div class="haas-linking">🔗 Soon to be linked with HAAS 2.0</div>
+    <div style="color:rgba(255,255,255,0.9); font-size:1.2rem; font-weight:600;">The World's Best Micro-SaaS File Converter</div>
+    <div class="haas-linking">
+        🔄 Future Integration: HAAS 2.0<br>
+        <span style="font-size:0.8rem; opacity:0.8; font-weight:500;">A more comprehensive and powerful version for complex financial orchestration.</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
