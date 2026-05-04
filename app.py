@@ -158,31 +158,56 @@ st.markdown("""
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-    /* Footer */
-    .footer-box { text-align: center; padding: 4rem 0 2rem; border-top: 1px solid #1e293b; margin-top: 4rem; }
-
-    /* Upload area polish */
-    [data-testid="stFileUploader"] {
-        border-radius: 14px;
+    /* Workspace Card */
+    .workspace-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 2.5rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        margin-top: 1rem;
     }
     
-    /* Button refinements */
+    /* Animations */
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .pulse-badge {
+        animation: pulse 2s infinite;
+        display: inline-block;
+        background: #064e3b;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+    }
+
+    /* Button Glow */
     .stButton > button[kind="primary"] {
         border-radius: 12px !important;
         font-weight: 700 !important;
         letter-spacing: 0.02em;
+        transition: all 0.3s ease !important;
+        border: none !important;
     }
-    
-    /* Download button */
-    .stDownloadButton > button {
-        border-radius: 12px !important;
+    .stButton > button[kind="primary"]:hover {
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important;
+        transform: translateY(-2px);
     }
     
     /* Expander styling */
     [data-testid="stExpander"] {
         border-radius: 12px;
-        border-color: rgba(255,255,255,0.06) !important;
+        border-color: rgba(255,255,255,0.08) !important;
+        background: rgba(255,255,255,0.01) !important;
     }
+    /* Footer */
+    .footer-box { text-align: center; padding: 4rem 0 2rem; border-top: 1px solid #1e293b; margin-top: 4rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -248,7 +273,7 @@ st.markdown("""
     <div style="color:rgba(255,255,255,0.9); font-size:1.3rem; font-weight:600; letter-spacing: 0.01em;">Enterprise-Grade File Transformation Suite</div>
     <div class="haas-linking">
         <span style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
-            <span style="background: #064e3b; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">PREVIEW</span>
+            <span class="pulse-badge">PREVIEW</span>
             Next-Gen HAAS 2.0 Integration
         </span>
         <div style="font-size:0.8rem; opacity:0.8; font-weight:500; margin-top: 4px;">Advanced financial orchestration and automated reporting engine.</div>
@@ -270,6 +295,9 @@ with col2:
     idx = conv_labels.index(selected_label)
     conv_data = conv_options[idx]
     source_exts, target_ext = conv_data[1], conv_data[2]
+    
+    # Workspace Card
+    st.markdown('<div class="workspace-card">', unsafe_allow_html=True)
     
     st.markdown(f"### 📤 Upload {selected_cat.split()[-1]}")
     ext_mapping = {".pdf":"pdf", ".docx":"docx", ".txt":"txt", ".pptx":"pptx", ".html":"html", ".htm":"html", ".md":"md", ".rtf":"rtf", ".odt":"odt", ".jpg":"jpg", ".jpeg":"jpeg", ".png":"png", ".webp":"webp", ".bmp":"bmp", ".tiff":"tiff", ".tif":"tiff", ".gif":"gif", ".ico":"ico", ".csv":"csv", ".xlsx":"xlsx", ".xls":"xls", ".json":"json", ".xml":"xml", ".yaml":"yaml", ".yml":"yaml"}
@@ -323,6 +351,8 @@ with col2:
             st.success("✅ Conversion Complete")
             st.download_button(label=f"⬇️ Download {st.session_state['conv_name']}", data=st.session_state["conv_data"], file_name=st.session_state["conv_name"], mime="application/octet-stream", type="primary", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True) # End Workspace Card
 
     # Guide
     st.markdown('<div id="comprehensive-guide" style="margin-top:6rem;"></div>', unsafe_allow_html=True)
