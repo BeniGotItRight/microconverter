@@ -126,11 +126,10 @@ def show_smart_advice(title, message, advice_type="info"):
     </div>
     """, unsafe_allow_html=True)
 
-# Sidebar Expanded
+# Sidebar with Collapsible Info
 with st.sidebar:
-    st.markdown('<div style="font-size: 2rem; font-weight: 800; color: #10b981; margin-bottom: 2rem;">CONVERTEX</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size: 2.25rem; font-weight: 800; color: #10b981; margin-bottom: 1.5rem; letter-spacing:-0.03em;">CONVERTEX</div>', unsafe_allow_html=True)
     
-    # 1. Controls
     st.markdown('<div class="sb-section"><span class="sb-label">01. Workflow Category</span>', unsafe_allow_html=True)
     category_list = list(CATEGORIES.keys())
     selected_cat = st.radio("Category", category_list, label_visibility="collapsed")
@@ -142,40 +141,35 @@ with st.sidebar:
     selected_label = st.selectbox("Operation", conv_labels, label_visibility="collapsed")
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # 3. Usage Guide (NEW)
-    st.markdown('<div class="sb-section"><span class="sb-label">Quick Tutorial</span>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">1️⃣ Choose your format group</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">2️⃣ Select the target format</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">3️⃣ Drop your file and convert</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">4️⃣ Download instant result</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    with st.expander("📝 QUICK START GUIDE", expanded=False):
+        st.markdown('<div class="sb-feature">1️⃣ Choose your format group</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sb-feature">2️⃣ Select the target format</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sb-feature">3️⃣ Drop your file and convert</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sb-feature">4️⃣ Download instant result</div>', unsafe_allow_html=True)
 
-    # 4. Expert Knowledge (NEW)
-    st.markdown('<div class="sb-section"><span class="sb-label">Expert Insights</span>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">🎯 <b>M-Pesa Expert:</b> Use PDF→Excel for statements.</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">🏗️ <b>Structure:</b> JSON→Excel flattens complex data.</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-feature">🚀 <b>Speed:</b> WebP is best for website images.</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    with st.expander("🎯 EXPERT INSIGHTS", expanded=False):
+        st.markdown('<div class="sb-feature">🏦 <b>Bank Expert:</b> Use PDF→Excel for statements.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sb-feature">🏗️ <b>Data:</b> JSON→Excel flattens complex data.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sb-feature">🚀 <b>Speed:</b> WebP is best for website images.</div>', unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.75rem; border-radius: 10px; font-size: 0.75rem; color: #10b981; text-align: center; margin-top: 1rem;">
+    <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.75rem; border-radius: 10px; font-size: 0.75rem; color: #10b981; text-align: center; margin-top: 1.5rem;">
         🛡️ <strong>Encrypted Session</strong><br>LexcoreTech military-grade security.
     </div>
     """, unsafe_allow_html=True)
 
-# Main
+# Main Header
 st.markdown('<h1 style="color:white; font-size:3rem; font-weight:800; margin-bottom:0;">Convertex</h1>', unsafe_allow_html=True)
 st.markdown('<p style="color:#64748b; font-size:1.2rem; margin-bottom:2.5rem;">Smart Engine by LexcoreTech & Benson Motari</p>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 8, 1])
 with col2:
-    # SMART ADVICE BANNERS
     if selected_label == "PDF → Excel (Bank Statements)":
-        show_smart_advice("Statement Specialist", "Bank PDFs are structured as tables. If columns are merged, use <b>Advanced Options</b> to isolate specific pages.")
+        show_smart_advice("Statement Specialist", "Bank PDFs are structured as tables. If columns are merged, use <b>Advanced Options</b> below.")
     elif "CSV" in selected_label:
-        show_smart_advice("Data Normalizer", "CSV encoding depends on the source system. 'auto' is usually best, but 'latin-1' fixes symbols.")
+        show_smart_advice("Data Normalizer", "CSV encoding depends on the system. Adjust <b>Delimiter</b> or <b>Encoding</b> if the result looks messy.")
     elif "WebP" in selected_label:
-        show_smart_advice("Image Optimizer", "WebP is the world's best format for web. It saves up to 80% space without losing quality.")
+        show_smart_advice("Image Optimizer", "WebP is the best format for web speed. It saves 80% space without losing quality.")
 
     # Workspace
     idx = conv_labels.index(selected_label)
@@ -187,24 +181,25 @@ with col2:
     allowed = [ext_mapping[e] for e in source_exts if e in ext_mapping]
     uploaded_file = st.file_uploader("Upload", type=allowed, label_visibility="collapsed")
 
-    # Advanced Options
-    st.markdown("### ⚙️ Smart Advanced Options")
+    # SMART ADVANCED OPTIONS (NOW COLLAPSIBLE AGAIN)
     encoding, delimiter, pages, password = None, None, None, None
-    c1, c2 = st.columns(2)
-    with c1:
-        if any(e in (".csv", ".json", ".xml", ".yaml") for e in source_exts):
-            encoding = st.selectbox("Encoding", ["auto", "utf-8", "latin-1", "cp1252"])
-            encoding = None if encoding == "auto" else encoding
-        if ".csv" in source_exts:
-            delimiter = st.selectbox("Delimiter", ["auto", ",", ";", "\\t"])
-            delimiter = None if delimiter == "auto" else delimiter
-    with c2:
-        if ".pdf" in source_exts:
-            p_str = st.text_input("Pages", placeholder="e.g. 0,1")
-            if p_str:
-                try: pages = [int(p.strip()) for p in p_str.split(",")]
-                except: pages = None
-            password = st.text_input("Password", type="password") or None
+    with st.expander("⚙️ SMART ADVANCED OPTIONS", expanded=False):
+        st.info("Only change these if the default conversion doesn't meet your needs.")
+        c1, c2 = st.columns(2)
+        with c1:
+            if any(e in (".csv", ".json", ".xml", ".yaml") for e in source_exts):
+                encoding = st.selectbox("Text Encoding", ["auto", "utf-8", "latin-1", "cp1252"])
+                encoding = None if encoding == "auto" else encoding
+            if ".csv" in source_exts:
+                delimiter = st.selectbox("CSV Delimiter", ["auto", ",", ";", "\\t"])
+                delimiter = None if delimiter == "auto" else delimiter
+        with c2:
+            if ".pdf" in source_exts:
+                p_str = st.text_input("Specific Pages", placeholder="e.g. 0,1")
+                if p_str:
+                    try: pages = [int(p.strip()) for p in p_str.split(",")]
+                    except: pages = None
+                password = st.text_input("File Password", type="password") or None
 
     if uploaded_file:
         file_ext = Path(uploaded_file.name).suffix.lower()
@@ -217,7 +212,7 @@ with col2:
                 output_p = create_temp_file(target_ext, delete_on_exit=False)
                 prog.progress(60)
                 _, warning = convert(input_p, output_p, target_ext, encoding=encoding, delimiter=delimiter, pages=pages, password=password)
-                if warning: show_smart_advice("Engine Notice", warning, "warning")
+                if warning: st.warning(warning)
                 prog.progress(100)
                 st.session_state["conv_data"] = output_p.read_bytes()
                 st.session_state["conv_name"] = Path(uploaded_file.name).stem + target_ext
@@ -225,8 +220,7 @@ with col2:
                 cleanup_temp(input_p)
                 cleanup_temp(output_p)
                 st.rerun()
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+            except Exception as e: st.error(f"Error: {str(e)}")
 
         res_key = st.session_state.get("conv_key")
         if res_key == (uploaded_file.name, target_ext) and "conv_data" in st.session_state:
@@ -235,32 +229,30 @@ with col2:
             st.download_button(label=f"⬇️ Download {st.session_state['conv_name']}", data=st.session_state["conv_data"], file_name=st.session_state["conv_name"], mime="application/octet-stream", type="primary", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # COMPREHENSIVE GUIDE SECTION (Advice Link points here)
+    # GUIDE SECTION
     st.markdown('<div id="comprehensive-guide" style="margin-top:6rem;"></div>', unsafe_allow_html=True)
-    with st.expander("📖 Comprehensive Format Guide & Advice", expanded=False):
+    with st.expander("📖 COMPREHENSIVE FORMAT GUIDE & ADVICE", expanded=False):
         st.markdown("""
         ### 🧐 When to use which format?
-        
         #### **1. Documents**
-        *   **PDF:** Use when you want a file to look *exactly* the same on every screen. Ideal for final contracts and invoices.
-        *   **Word (.docx):** Use when you need to *edit* text or collaborate on a draft.
-        *   **Markdown (.md):** Best for technical writing and READMEs. It's clean and easy to version control.
+        *   **PDF:** Final contracts and invoices. Professional and universal.
+        *   **Word (.docx):** Collaborative drafts and text editing.
+        *   **Markdown (.md):** Technical documentation and READMEs.
         
         #### **2. Data & Statements**
-        *   **Excel (.xlsx):** Use for analyzing data, creating charts, and doing calculations.
-        *   **CSV:** Universal data format. Use when moving data between different software or databases.
-        *   **JSON:** The "language of the web." Best for developers and system integrations.
+        *   **Excel (.xlsx):** Data analysis, charts, and calculations.
+        *   **CSV:** Universal data exchange between software.
+        *   **JSON:** Developer integrations and web data.
         
         #### **3. Images**
-        *   **WebP:** **(Highly Recommended)** Use for your website. It's much smaller than JPG but looks just as good.
-        *   **PNG:** Use for logos or icons that need a transparent background.
-        *   **JPG:** Standard for high-quality photographs.
+        *   **WebP:** Best for websites. Tiny file size, high quality.
+        *   **PNG:** Logos/Icons with transparency.
+        *   **JPG:** High-quality photographs.
         
         ### 🛠 How Convertex helps you?
-        Convertex is built with **LexcoreTech Intelligence**. Unlike free online converters that steal your data, Convertex:
-        1.  **Protects your Privacy:** Files are processed in a secure temporary silo and wiped immediately.
-        2.  **Fixes Data Errors:** Our Smart Engine handles M-Pesa statements and complex CSVs that usually break other tools.
-        3.  **No Limits:** Convert as much as you want without annoying "Pro" subscriptions.
+        1. **Privacy:** LexcoreTech Military-grade local silos.
+        2. **Accuracy:** Smart Engine fixes broken data formats.
+        3. **Freedom:** Unlimited conversions, zero subscriptions.
         """)
 
 # Footer
