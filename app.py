@@ -267,10 +267,10 @@ st.markdown("""
     <div style="color:rgba(255,255,255,0.9); font-size:1.3rem; font-weight:600; letter-spacing: 0.01em;">Enterprise-Grade File Transformation Suite</div>
     <div class="haas-linking">
         <span style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
-            <span class="pulse-badge">PREVIEW</span>
-            Next-Gen HAAS 2.0 Integration
+            <span class="pulse-badge">UPCOMING</span>
+            HAAS Financial Intelligence Hub
         </span>
-        <div style="font-size:0.8rem; opacity:0.8; font-weight:500; margin-top: 4px;">Advanced financial orchestration and automated reporting engine.</div>
+        <div style="font-size:0.8rem; opacity:0.8; font-weight:500; margin-top: 4px;">Autonomous Audit-Ready Workflows & Predictive Tax Analytics Engine.</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
