@@ -83,7 +83,8 @@ st.markdown("""
     }
     .sb-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
     .sb-label { font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.75rem; display: block; }
-    
+    .sb-feature { font-size: 0.85rem; color: #94a3b8; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+
     /* Smart Advice Banner */
     .smart-banner {
         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -95,12 +96,22 @@ st.markdown("""
         animation: slideDown 0.5s ease-out;
     }
     @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .banner-title { color: #10b981; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .banner-title { color: #10b981; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
     .banner-text { color: #94a3b8; font-size: 1.1rem; line-height: 1.5; }
-    .banner-action { color: #34d399; font-weight: 700; margin-top: 1rem; cursor: pointer; }
+    .advice-btn {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.5rem 1.25rem;
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid #10b981;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
 
-    /* Cards */
-    .info-card { background: #1e293b; border-radius: 20px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem; }
+    /* Footer */
     .footer-box { text-align: center; padding: 4rem 0 2rem; border-top: 1px solid #1e293b; margin-top: 4rem; }
 </style>
 """, unsafe_allow_html=True)
@@ -111,82 +122,89 @@ def show_smart_advice(title, message, advice_type="info"):
     <div class="smart-banner">
         <div class="banner-title">{icon} {title}</div>
         <div class="banner-text">{message}</div>
-        <div class="banner-action">Smart Suggestion: Adjust settings in 'Advanced Options' below if issues persist.</div>
+        <a href="#comprehensive-guide" class="advice-btn">📖 View Full Guide & Advice</a>
     </div>
     """, unsafe_allow_html=True)
 
-# Sidebar
+# Sidebar Expanded
 with st.sidebar:
     st.markdown('<div style="font-size: 2rem; font-weight: 800; color: #10b981; margin-bottom: 2rem;">CONVERTEX</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sb-section"><span class="sb-label">01. Category</span>', unsafe_allow_html=True)
+    
+    # 1. Controls
+    st.markdown('<div class="sb-section"><span class="sb-label">01. Workflow Category</span>', unsafe_allow_html=True)
     category_list = list(CATEGORIES.keys())
     selected_cat = st.radio("Category", category_list, label_visibility="collapsed")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown('<div class="sb-section"><span class="sb-label">02. Operation</span>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-section"><span class="sb-label">02. Specific Operation</span>', unsafe_allow_html=True)
     conv_options = CATEGORIES[selected_cat]
     conv_labels = [c[0] for c in conv_options]
     selected_label = st.selectbox("Operation", conv_labels, label_visibility="collapsed")
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # 3. Usage Guide (NEW)
+    st.markdown('<div class="sb-section"><span class="sb-label">Quick Tutorial</span>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">1️⃣ Choose your format group</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">2️⃣ Select the target format</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">3️⃣ Drop your file and convert</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">4️⃣ Download instant result</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # 4. Expert Knowledge (NEW)
+    st.markdown('<div class="sb-section"><span class="sb-label">Expert Insights</span>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">🎯 <b>M-Pesa Expert:</b> Use PDF→Excel for statements.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">🏗️ <b>Structure:</b> JSON→Excel flattens complex data.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sb-feature">🚀 <b>Speed:</b> WebP is best for website images.</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
     st.markdown("""
     <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.75rem; border-radius: 10px; font-size: 0.75rem; color: #10b981; text-align: center; margin-top: 1rem;">
-        🔒 <strong>Privacy First</strong><br>Files are processed locally and never stored.
+        🛡️ <strong>Encrypted Session</strong><br>LexcoreTech military-grade security.
     </div>
     """, unsafe_allow_html=True)
 
 # Main
 st.markdown('<h1 style="color:white; font-size:3rem; font-weight:800; margin-bottom:0;">Convertex</h1>', unsafe_allow_html=True)
-st.markdown('<p style="color:#64748b; font-size:1.2rem; margin-bottom:2.5rem;">Smart File Engine by LexcoreTech & Benson Motari</p>', unsafe_allow_html=True)
+st.markdown('<p style="color:#64748b; font-size:1.2rem; margin-bottom:2.5rem;">Smart Engine by LexcoreTech & Benson Motari</p>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 8, 1])
 with col2:
+    # SMART ADVICE BANNERS
+    if selected_label == "PDF → Excel (Bank Statements)":
+        show_smart_advice("Statement Specialist", "Bank PDFs are structured as tables. If columns are merged, use <b>Advanced Options</b> to isolate specific pages.")
+    elif "CSV" in selected_label:
+        show_smart_advice("Data Normalizer", "CSV encoding depends on the source system. 'auto' is usually best, but 'latin-1' fixes symbols.")
+    elif "WebP" in selected_label:
+        show_smart_advice("Image Optimizer", "WebP is the world's best format for web. It saves up to 80% space without losing quality.")
+
+    # Workspace
     idx = conv_labels.index(selected_label)
     conv_data = conv_options[idx]
     source_exts, target_ext = conv_data[1], conv_data[2]
     
-    # SMART SUGGESTIONS TRIGGER
-    if selected_label == "PDF → Excel (Bank Statements)":
-        show_smart_advice("Bank Statement Expert", "Processing high-precision tables. If your PDF is password-protected or has multiple statement types, use the <b>Advanced Options</b> to specify pages or passwords.")
-    elif "CSV" in selected_label:
-        show_smart_advice("CSV Smart Sync", "CSV encoding varies by system. If your Excel looks unorganized after conversion, try changing the <b>Delimiter</b> or <b>Encoding</b> in Advanced Options.")
-
-    # Workspace
     st.markdown(f"### 📤 Upload {selected_cat.split()[-1]}")
     ext_mapping = {".pdf":"pdf", ".docx":"docx", ".txt":"txt", ".pptx":"pptx", ".html":"html", ".htm":"html", ".md":"md", ".rtf":"rtf", ".odt":"odt", ".jpg":"jpg", ".jpeg":"jpeg", ".png":"png", ".webp":"webp", ".bmp":"bmp", ".tiff":"tiff", ".tif":"tiff", ".gif":"gif", ".ico":"ico", ".csv":"csv", ".xlsx":"xlsx", ".xls":"xls", ".json":"json", ".xml":"xml", ".yaml":"yaml", ".yml":"yaml"}
     allowed = [ext_mapping[e] for e in source_exts if e in ext_mapping]
-    
     uploaded_file = st.file_uploader("Upload", type=allowed, label_visibility="collapsed")
 
-    # ADVANCED OPTIONS (Always visible but grouped by context)
+    # Advanced Options
     st.markdown("### ⚙️ Smart Advanced Options")
     encoding, delimiter, pages, password = None, None, None, None
-    
-    with st.container():
-        # Context-aware Advanced Options
-        c1, c2 = st.columns(2)
-        with c1:
-            if any(e in (".csv", ".json", ".xml", ".yaml") for e in source_exts):
-                enc_opt = st.selectbox("Text Encoding", ["auto", "utf-8", "latin-1", "iso-8859-1", "cp1252"], help="Fixes weird characters in data.")
-                encoding = None if enc_opt == "auto" else enc_opt
-            if ".csv" in source_exts:
-                delim_opt = st.selectbox("CSV Delimiter", ["auto", "Comma (,)", "Semicolon (;)", "Tab"], help="Fixes columns not splitting correctly.")
-                delim_map = {"auto": None, "Comma (,)": ",", "Semicolon (;)": ";", "Tab": "\t"}
-                delimiter = delim_map[delim_opt]
-        
-        with c2:
-            if ".pdf" in source_exts:
-                pages_str = st.text_input("Specific Pages", placeholder="e.g. 0,2,5-10", help="Zero-based index. Leave empty for all.")
-                if pages_str:
-                    try:
-                        pages = []
-                        for p in pages_str.split(","):
-                            if "-" in p:
-                                start, end = map(int, p.split("-"))
-                                pages.extend(range(start, end + 1))
-                            else: pages.append(int(p))
-                    except: pages = None
-                password = st.text_input("File Password", type="password", help="For protected PDF bank statements.") or None
+    c1, c2 = st.columns(2)
+    with c1:
+        if any(e in (".csv", ".json", ".xml", ".yaml") for e in source_exts):
+            encoding = st.selectbox("Encoding", ["auto", "utf-8", "latin-1", "cp1252"])
+            encoding = None if encoding == "auto" else encoding
+        if ".csv" in source_exts:
+            delimiter = st.selectbox("Delimiter", ["auto", ",", ";", "\\t"])
+            delimiter = None if delimiter == "auto" else delimiter
+    with c2:
+        if ".pdf" in source_exts:
+            p_str = st.text_input("Pages", placeholder="e.g. 0,1")
+            if p_str:
+                try: pages = [int(p.strip()) for p in p_str.split(",")]
+                except: pages = None
+            password = st.text_input("Password", type="password") or None
 
     if uploaded_file:
         file_ext = Path(uploaded_file.name).suffix.lower()
@@ -197,28 +215,18 @@ with col2:
                 input_p = create_temp_file(file_ext, delete_on_exit=False)
                 input_p.write_bytes(uploaded_file.getvalue())
                 output_p = create_temp_file(target_ext, delete_on_exit=False)
-                
-                prog.progress(50)
+                prog.progress(60)
                 _, warning = convert(input_p, output_p, target_ext, encoding=encoding, delimiter=delimiter, pages=pages, password=password)
-                
                 if warning: show_smart_advice("Engine Notice", warning, "warning")
-                
                 prog.progress(100)
                 st.session_state["conv_data"] = output_p.read_bytes()
                 st.session_state["conv_name"] = Path(uploaded_file.name).stem + target_ext
                 st.session_state["conv_key"] = (uploaded_file.name, target_ext)
-                
                 cleanup_temp(input_p)
                 cleanup_temp(output_p)
                 st.rerun()
             except Exception as e:
-                err_msg = str(e)
-                if "No extractable data found" in err_msg:
-                    show_smart_advice("Scanned PDF Detected", "This PDF appears to be a scanned image. Convertex works best with digital documents. Suggestion: Use an OCR tool first or try a different statement export.", "warning")
-                elif "decode" in err_msg.lower():
-                    show_smart_advice("Encoding Conflict", "The file encoding couldn't be detected. Suggestion: Try setting Encoding to 'latin-1' or 'cp1252' in Advanced Options.", "warning")
-                else:
-                    st.error(f"Error: {err_msg}")
+                st.error(f"Error: {str(e)}")
 
         res_key = st.session_state.get("conv_key")
         if res_key == (uploaded_file.name, target_ext) and "conv_data" in st.session_state:
@@ -226,6 +234,34 @@ with col2:
             st.success("✅ Conversion Complete")
             st.download_button(label=f"⬇️ Download {st.session_state['conv_name']}", data=st.session_state["conv_data"], file_name=st.session_state["conv_name"], mime="application/octet-stream", type="primary", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
+
+    # COMPREHENSIVE GUIDE SECTION (Advice Link points here)
+    st.markdown('<div id="comprehensive-guide" style="margin-top:6rem;"></div>', unsafe_allow_html=True)
+    with st.expander("📖 Comprehensive Format Guide & Advice", expanded=False):
+        st.markdown("""
+        ### 🧐 When to use which format?
+        
+        #### **1. Documents**
+        *   **PDF:** Use when you want a file to look *exactly* the same on every screen. Ideal for final contracts and invoices.
+        *   **Word (.docx):** Use when you need to *edit* text or collaborate on a draft.
+        *   **Markdown (.md):** Best for technical writing and READMEs. It's clean and easy to version control.
+        
+        #### **2. Data & Statements**
+        *   **Excel (.xlsx):** Use for analyzing data, creating charts, and doing calculations.
+        *   **CSV:** Universal data format. Use when moving data between different software or databases.
+        *   **JSON:** The "language of the web." Best for developers and system integrations.
+        
+        #### **3. Images**
+        *   **WebP:** **(Highly Recommended)** Use for your website. It's much smaller than JPG but looks just as good.
+        *   **PNG:** Use for logos or icons that need a transparent background.
+        *   **JPG:** Standard for high-quality photographs.
+        
+        ### 🛠 How Convertex helps you?
+        Convertex is built with **LexcoreTech Intelligence**. Unlike free online converters that steal your data, Convertex:
+        1.  **Protects your Privacy:** Files are processed in a secure temporary silo and wiped immediately.
+        2.  **Fixes Data Errors:** Our Smart Engine handles M-Pesa statements and complex CSVs that usually break other tools.
+        3.  **No Limits:** Convert as much as you want without annoying "Pro" subscriptions.
+        """)
 
 # Footer
 st.markdown(f"""
