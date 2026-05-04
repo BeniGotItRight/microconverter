@@ -62,7 +62,7 @@ CONVERSION_INFO = {
 
 # Page config
 st.set_page_config(
-    page_title="Convertex - Smart Suite",
+    page_title="Convertex - Hamo Associates",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -111,6 +111,37 @@ st.markdown("""
         font-size: 0.85rem;
     }
 
+    /* Hero & Client Header */
+    .hero-box {
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+        border-radius: 24px;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .client-header {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #d1fae5;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+    .hero-title { font-size: 3.5rem; font-weight: 800; color: white; letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+    .haas-linking {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #064e3b;
+        background: #6ee7b7;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        display: inline-block;
+        margin-top: 1rem;
+    }
+    
     /* Footer */
     .footer-box { text-align: center; padding: 4rem 0 2rem; border-top: 1px solid #1e293b; margin-top: 4rem; }
 </style>
@@ -158,10 +189,17 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# Main
-st.markdown('<h1 style="color:white; font-size:3rem; font-weight:800; margin-bottom:0;">Convertex</h1>', unsafe_allow_html=True)
-st.markdown('<p style="color:#64748b; font-size:1.2rem; margin-bottom:2.5rem;">Smart Engine by LexcoreTech & Benson Motari</p>', unsafe_allow_html=True)
+# Main Hero Header
+st.markdown(f"""
+<div class="hero-box">
+    <div class="client-header">Exclusively Crafted For Hamo Associates</div>
+    <div class="hero-title">Convertex</div>
+    <div style="color:rgba(255,255,255,0.9); font-size:1.1rem; font-weight:500;">The World's Best Micro-SaaS File Converter</div>
+    <div class="haas-linking">🔗 Soon to be linked with HAAS 2.0</div>
+</div>
+""", unsafe_allow_html=True)
 
+# Workspace
 col1, col2, col3 = st.columns([1, 8, 1])
 with col2:
     if selected_label == "PDF → Excel (Bank Statements)":
@@ -171,7 +209,7 @@ with col2:
     elif "WebP" in selected_label:
         show_smart_advice("Image Optimizer", "WebP is the best format for web speed. It saves 80% space without losing quality.")
 
-    # Workspace
+    # Workspace logic
     idx = conv_labels.index(selected_label)
     conv_data = conv_options[idx]
     source_exts, target_ext = conv_data[1], conv_data[2]
@@ -181,7 +219,7 @@ with col2:
     allowed = [ext_mapping[e] for e in source_exts if e in ext_mapping]
     uploaded_file = st.file_uploader("Upload", type=allowed, label_visibility="collapsed")
 
-    # SMART ADVANCED OPTIONS
+    # Advanced Options
     encoding, delimiter, pages, password = None, None, None, None
     with st.expander("⚙️ SMART ADVANCED OPTIONS", expanded=False):
         st.info("Use these to fix issues like messy columns, weird symbols, or encrypted PDFs.")
@@ -191,7 +229,7 @@ with col2:
                 encoding = st.selectbox("Text Encoding", ["auto", "utf-8", "latin-1", "cp1252"])
                 encoding = None if encoding == "auto" else encoding
             if ".csv" in source_exts:
-                delimiter = st.selectbox("CSV Delimiter", ["auto", ",", ";", "\\t"])
+                delimiter = st.selectbox("Delimiter", ["auto", ",", ";", "\\t"])
                 delimiter = None if delimiter == "auto" else delimiter
         with c2:
             if ".pdf" in source_exts:
@@ -229,12 +267,11 @@ with col2:
             st.download_button(label=f"⬇️ Download {st.session_state['conv_name']}", data=st.session_state["conv_data"], file_name=st.session_state["conv_name"], mime="application/octet-stream", type="primary", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # GUIDE SECTION
+    # Guide
     st.markdown('<div id="comprehensive-guide" style="margin-top:6rem;"></div>', unsafe_allow_html=True)
     with st.expander("📖 COMPREHENSIVE FORMAT GUIDE & ADVICE", expanded=False):
         st.markdown("""
         ### 🧐 When to use which format?
-        
         #### **1. Documents**
         *   **PDF:** Final contracts and invoices. Professional and universal.
         *   **Word (.docx):** Collaborative drafts and text editing.
@@ -246,7 +283,7 @@ with col2:
         *   **JSON:** Developer integrations and web data.
         
         #### **3. Images**
-        *   **WebP:** **(Highly Recommended)** Best for websites. Tiny file size, high quality.
+        *   **WebP:** Best for websites. Tiny file size, high quality.
         *   **PNG:** Logos/Icons with transparency.
         *   **JPG:** High-quality photographs.
         
@@ -254,7 +291,7 @@ with col2:
         1.  **Privacy:** LexcoreTech Military-grade local silos ensure your files never leak.
         2.  **Accuracy:** Smart Engine fixes broken data formats and table structures automatically.
         3.  **Freedom:** Unlimited conversions with zero subscriptions.
-        4.  **Troubleshooting (Advanced Options):** Use these to fix "difficult" files. If a CSV looks messy, adjust the **Delimiter**. If a PDF is protected, use the **Password** field. It puts the power in your hands.
+        4.  **Troubleshooting (Advanced Options):** Use these to fix "difficult" files manually. It puts the power in your hands.
         """)
 
 # Footer
