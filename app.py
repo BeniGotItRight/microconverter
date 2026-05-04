@@ -200,7 +200,8 @@ def show_smart_advice(title, message, advice_type="info"):
 with st.sidebar:
     logo_path = Path("assets/hamo_logo.png")
     if logo_path.exists():
-        st.image(str(logo_path), use_container_width=True)
+        # Using a standard professional width for sidebar logos
+        st.image(str(logo_path), width=150)
     else:
         st.markdown('<div style="font-size: 1.5rem; font-weight: 800; color: #10b981; margin-bottom: 1.5rem; text-align:center;">HAMO & ASSOCIATES</div>', unsafe_allow_html=True)
     
@@ -236,7 +237,8 @@ with st.sidebar:
 st.markdown('<div class="hero-box">', unsafe_allow_html=True)
 if logo_path.exists():
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-    st.image(str(logo_path), width=250)
+    # Reduced to a more standard hero logo size
+    st.image(str(logo_path), width=180)
     st.markdown('</div>', unsafe_allow_html=True)
 else:
     st.markdown('<div style="font-size: 1rem; font-weight: 700; color: #d1fae5; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;">Hamo & Associates Professional Suite</div>', unsafe_allow_html=True)
