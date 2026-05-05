@@ -184,7 +184,7 @@ def pdf_to_xml(
         for idx, i in enumerate(page_range):
             if i < 0 or i >= len(pdf.pages): continue
             if status_callback:
-                status_callback(f"Extracting XML Data - Page {idx + 1} of {total}...", (idx / total))
+                status_callback(f"Analyzing Page {idx + 1} of {total}...", (idx / total))
             page = pdf.pages[i]
             pages_data.append({
                 "page": i + 1,
@@ -274,7 +274,7 @@ def pdf_to_json(
         for idx, i in enumerate(page_range):
             if i < 0 or i >= len(pdf.pages): continue
             if status_callback:
-                status_callback(f"Parsing JSON Structure - Page {idx + 1} of {total}...", (idx / total))
+                status_callback(f"Analyzing Page {idx + 1} of {total}...", (idx / total))
             page = pdf.pages[i]
             data["pages"].append({
                 "page": i + 1,
