@@ -22,6 +22,20 @@ def _detect_encoding(file_path: Path) -> str:
     return result.get("encoding") or "utf-8"
 
 
+def _deduplicate_columns(columns: list) -> list:
+    """Ensure column names are unique to avoid Pandas reindexing errors."""
+    new_cols = []
+    for i, col in enumerate(columns):
+        name = str(col).strip() if col else f"Column_{i}"
+        if name in new_cols:
+            count = 1
+            while f"{name}_{count}" in new_cols:
+                count += 1
+            name = f"{name}_{count}"
+        new_cols.append(name)
+    return new_cols
+
+
 def csv_to_excel(
     input_path: Path,
     output_path: Path,
@@ -130,9 +144,11 @@ def pdf_to_excel(
     dfs = []
     for tbl in all_tables:
         if len(tbl) > 1:
-            df = pd.DataFrame(tbl[1:], columns=tbl[0])
+            cols = _deduplicate_columns(tbl[0])
+            df = pd.DataFrame(tbl[1:], columns=cols)
         elif tbl:
             df = pd.DataFrame(tbl)
+            df.columns = _deduplicate_columns(df.columns)
         else:
             continue
         if not df.empty:
