@@ -326,14 +326,30 @@ with col2:
         st.markdown("### 🚀 Step 2: Convert")
         if st.button(f"Process to {target_ext.upper().strip('.')}", type="primary", use_container_width=True):
             try:
+                status_container = st.empty()
                 prog = st.progress(0)
+                
+                def update_status(text, p):
+                    status_container.info(f"⏳ {text}")
+                    prog.progress(min(int(p * 100), 100))
+
                 input_p = create_temp_file(file_ext, delete_on_exit=False)
                 input_p.write_bytes(uploaded_file.getvalue())
                 output_p = create_temp_file(target_ext, delete_on_exit=False)
-                prog.progress(60)
-                _, warning = convert(input_p, output_p, target_ext, encoding=encoding, delimiter=delimiter, pages=pages, password=password)
-                if warning: st.warning(warning)
+                
+                _, warning = convert(
+                    input_p, output_p, target_ext, 
+                    encoding=encoding, 
+                    delimiter=delimiter, 
+                    pages=pages, 
+                    password=password,
+                    status_callback=update_status
+                )
+                
+                status_container.empty()
                 prog.progress(100)
+                
+                if warning: st.warning(warning)
                 st.session_state["conv_data"] = output_p.read_bytes()
                 st.session_state["conv_name"] = Path(uploaded_file.name).stem + target_ext
                 st.session_state["conv_key"] = (uploaded_file.name, target_ext)

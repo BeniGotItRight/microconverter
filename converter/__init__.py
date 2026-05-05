@@ -46,6 +46,7 @@ def convert(
     delimiter: str | None = None,
     pages: list[int] | None = None,
     password: str | None = None,
+    status_callback: callable = None,
 ) -> tuple[object | None, str | None]:
     """
     Route to appropriate converter. Returns (preview_data, warning_message).
@@ -66,11 +67,11 @@ def convert(
         if target_ext == ".docx":
             pdf_to_word(input_path, output_path)
         elif target_ext == ".xlsx":
-            _, warning = pdf_to_excel(input_path, output_path, pages=pages, password=password)
+            _, warning = pdf_to_excel(input_path, output_path, pages=pages, password=password, status_callback=status_callback)
         elif target_ext == ".xml":
-            _, warning = pdf_to_xml(input_path, output_path, pages=pages, password=password)
+            _, warning = pdf_to_xml(input_path, output_path, pages=pages, password=password, status_callback=status_callback)
         elif target_ext == ".json":
-            _, warning = pdf_to_json(input_path, output_path, pages=pages, password=password)
+            _, warning = pdf_to_json(input_path, output_path, pages=pages, password=password, status_callback=status_callback)
         elif target_ext == ".txt":
             pdf_to_text(input_path, output_path)
         else:

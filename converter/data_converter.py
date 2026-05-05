@@ -95,38 +95,37 @@ def pdf_to_excel(
     output_path: Path,
     pages: list[int] | None = None,
     password: str | None = None,
+    status_callback: callable = None,
 ) -> tuple[pd.DataFrame | None, str | None]:
     """
     Extract tables from PDF and save as Excel.
-    Returns (DataFrame if tables found, optional warning message).
-    Best for machine-generated PDFs (bank/M-Pesa statements).
     """
     import pdfplumber
 
     all_tables = []
     warning = None
-
-    kwargs = {}
-    if password:
-        kwargs["password"] = password
+    kwargs = {"password": password} if password else {}
 
     with pdfplumber.open(input_path, **kwargs) as pdf:
         page_range = pages if pages else range(len(pdf.pages))
-        for i in page_range:
-            if i < 0 or i >= len(pdf.pages):
-                continue
+        total = len(page_range)
+        for idx, i in enumerate(page_range):
+            if i < 0 or i >= len(pdf.pages): continue
+            if status_callback:
+                status_callback(f"Analyzing Page {idx + 1} of {total}...", (idx / total))
+            
             page = pdf.pages[i]
             tables = page.extract_tables()
             for tbl in tables:
                 if tbl and any(any(cell for cell in row) for row in tbl):
-                    # Clean None cells and whitespace
                     cleaned = [[str(c).strip() if c else "" for c in row] for row in tbl]
                     all_tables.append(cleaned)
 
         if not all_tables:
-            # Try text-based extraction as fallback
             all_text_lines = []
-            for page in pdf.pages:
+            for i, page in enumerate(pdf.pages):
+                if status_callback:
+                    status_callback(f"Scanning Text - Page {i+1}...", (i / len(pdf.pages)))
                 text = page.extract_text()
                 if text and text.strip():
                     lines = [l.strip().split() for l in text.split("\n") if l.strip()]
@@ -136,10 +135,7 @@ def pdf_to_excel(
                 all_tables.append(all_text_lines)
                 warning = "No structured tables found. Text was extracted as rows instead."
             else:
-                raise ValueError(
-                    "No extractable data found. "
-                    "This PDF might be scanned—try an OCR tool."
-                )
+                raise ValueError("No extractable data found. This PDF might be scanned.")
 
     dfs = []
     for tbl in all_tables:
@@ -168,6 +164,7 @@ def pdf_to_xml(
     output_path: Path,
     pages: list[int] | None = None,
     password: str | None = None,
+    status_callback: callable = None,
 ) -> tuple[str | None, str | None]:
     """
     High-precision extraction from PDFs (specialized for Bank Statements) to XML.
@@ -183,8 +180,11 @@ def pdf_to_xml(
 
     with pdfplumber.open(input_path, **kwargs) as pdf:
         page_range = pages if pages else range(len(pdf.pages))
-        for i in page_range:
+        total = len(page_range)
+        for idx, i in enumerate(page_range):
             if i < 0 or i >= len(pdf.pages): continue
+            if status_callback:
+                status_callback(f"Extracting XML Data - Page {idx + 1} of {total}...", (idx / total))
             page = pdf.pages[i]
             pages_data.append({
                 "page": i + 1,
@@ -259,6 +259,7 @@ def pdf_to_json(
     output_path: Path,
     pages: list[int] | None = None,
     password: str | None = None,
+    status_callback: callable = None,
 ) -> tuple[dict | None, str | None]:
     """Convert PDF data (text and tables) to structured JSON."""
     import pdfplumber
@@ -269,8 +270,11 @@ def pdf_to_json(
 
     with pdfplumber.open(input_path, **kwargs) as pdf:
         page_range = pages if pages else range(len(pdf.pages))
-        for i in page_range:
+        total = len(page_range)
+        for idx, i in enumerate(page_range):
             if i < 0 or i >= len(pdf.pages): continue
+            if status_callback:
+                status_callback(f"Parsing JSON Structure - Page {idx + 1} of {total}...", (idx / total))
             page = pdf.pages[i]
             data["pages"].append({
                 "page": i + 1,
