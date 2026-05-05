@@ -10,6 +10,8 @@ from .data_converter import (
     json_to_pdf,
     json_to_yaml,
     pdf_to_excel,
+    pdf_to_xml,
+    pdf_to_json,
     xml_to_csv,
     xml_to_excel,
     xml_to_json,
@@ -65,6 +67,10 @@ def convert(
             pdf_to_word(input_path, output_path)
         elif target_ext == ".xlsx":
             _, warning = pdf_to_excel(input_path, output_path, pages=pages, password=password)
+        elif target_ext == ".xml":
+            _, warning = pdf_to_xml(input_path, output_path, pages=pages, password=password)
+        elif target_ext == ".json":
+            _, warning = pdf_to_json(input_path, output_path, pages=pages, password=password)
         elif target_ext == ".txt":
             pdf_to_text(input_path, output_path)
         else:

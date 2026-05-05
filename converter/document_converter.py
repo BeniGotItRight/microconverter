@@ -21,6 +21,34 @@ def _safe_latin1(text: str, max_len: int = 0) -> str:
     return str(text).encode("latin-1", "replace").decode("latin-1")
 
 
+def ocr_pdf(path: Path) -> str:
+    """
+    Extract text from scanned PDFs using OCR.
+    Requires tesseract-ocr and poppler-utils system packages.
+    """
+    try:
+        from pdf2image import convert_from_path
+        import pytesseract
+        
+        # Check if tesseract is installed
+        try:
+            pytesseract.get_tesseract_version()
+        except:
+            raise RuntimeError("Tesseract OCR engine not found on system path.")
+        
+        images = convert_from_path(str(path), dpi=300)
+        full_text = ""
+        for i, img in enumerate(images):
+            text = pytesseract.image_to_string(img, lang='eng')
+            full_text += f"--- Page {i+1} ---\n{text}\n\n"
+        return full_text
+    except Exception as e:
+        raise RuntimeError(
+            "OCR failed. Please ensure 'tesseract-ocr' and 'poppler-utils' "
+            f"are installed on your system. Error: {str(e)}"
+        )
+
+
 def pdf_to_word(input_path: Path, output_path: Path) -> None:
     """Convert PDF to Word (.docx) using pdf2docx."""
     from pdf2docx import Converter
@@ -33,7 +61,7 @@ def pdf_to_word(input_path: Path, output_path: Path) -> None:
 
 
 def pdf_to_text(input_path: Path, output_path: Path) -> None:
-    """Extract all text from PDF and save as .txt."""
+    """Extract all text from PDF and save as .txt. Falls back to OCR if needed."""
     import pdfplumber
 
     lines = []
@@ -42,8 +70,15 @@ def pdf_to_text(input_path: Path, output_path: Path) -> None:
             text = page.extract_text()
             if text:
                 lines.append(text)
+    
     if not lines:
-        raise ValueError("No extractable text found in PDF. It may be scanned.")
+        # Try OCR as fallback
+        try:
+            text = ocr_pdf(input_path)
+            lines = [text]
+        except Exception as e:
+            raise ValueError(f"No extractable text found and OCR failed: {str(e)}")
+            
     output_path.write_text("\n\n".join(lines), encoding="utf-8")
 
 

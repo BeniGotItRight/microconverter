@@ -27,6 +27,8 @@ CATEGORIES = {
     ],
     "📊 Data & Statements": [
         ("PDF → Excel (Bank Statements)", [".pdf"], ".xlsx"),
+        ("PDF → XML (Bank Statements)", [".pdf"], ".xml"),
+        ("PDF → JSON", [".pdf"], ".json"),
         ("CSV → Excel", [".csv"], ".xlsx"),
         ("CSV → PDF", [".csv"], ".pdf"),
         ("Excel → CSV", [".xlsx", ".xls"], ".csv"),
@@ -56,6 +58,7 @@ CATEGORIES = {
 CONVERSION_INFO = {
     "PDF → Word": {"description": "Transform non-editable PDF documents into fully editable Microsoft Word (.docx) files.", "use_cases": ["Contracts", "Manuscripts", "Legal Documents"], "tip": "Works best with digital PDFs."},
     "PDF → Excel (Bank Statements)": {"description": "High-precision extraction of tables from PDF bank statements into Excel spreadsheets.", "use_cases": ["M-Pesa Statements", "Bank Statements", "Reconciliations"], "tip": "Optimized for M-Pesa and local bank reports."},
+    "PDF → XML (Bank Statements)": {"description": "Standardized XML export for financial data. Extracts account info, summaries, and transactions into audit-ready schemas.", "use_cases": ["Automated Audits", "Tax Preparation", "ERP Integration"], "tip": "Next-Gen HAAS Intelligence logic."},
     "Word → PDF": {"description": "Convert Word documents to professional PDF files for universal viewing.", "use_cases": ["Resumes", "Official Letters"], "tip": "Preserves basic layout and tables."},
     "CSV → Excel": {"description": "Convert raw CSV data into clean, professionally formatted Excel workbooks.", "use_cases": ["Data Cleaning", "System Exports"], "tip": "Auto-sizes columns and detects encoding."},
 }

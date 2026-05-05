@@ -105,7 +105,9 @@ def pdf_to_excel(
             tables = page.extract_tables()
             for tbl in tables:
                 if tbl and any(any(cell for cell in row) for row in tbl):
-                    all_tables.append(tbl)
+                    # Clean None cells and whitespace
+                    cleaned = [[str(c).strip() if c else "" for c in row] for row in tbl]
+                    all_tables.append(cleaned)
 
         if not all_tables:
             # Try text-based extraction as fallback
@@ -143,6 +145,127 @@ def pdf_to_excel(
     combined.to_excel(output_path, index=False, engine="openpyxl")
     _autofit_excel_columns(output_path)
     return combined, warning
+
+
+def pdf_to_xml(
+    input_path: Path,
+    output_path: Path,
+    pages: list[int] | None = None,
+    password: str | None = None,
+) -> tuple[str | None, str | None]:
+    """
+    High-precision extraction from PDFs (specialized for Bank Statements) to XML.
+    """
+    import pdfplumber
+    import xml.etree.ElementTree as ET
+    from xml.dom import minidom
+    import re
+    from datetime import datetime
+
+    pages_data = []
+    kwargs = {"password": password} if password else {}
+
+    with pdfplumber.open(input_path, **kwargs) as pdf:
+        page_range = pages if pages else range(len(pdf.pages))
+        for i in page_range:
+            if i < 0 or i >= len(pdf.pages): continue
+            page = pdf.pages[i]
+            pages_data.append({
+                "page": i + 1,
+                "text": page.extract_text() or "",
+                "tables": page.extract_tables() or []
+            })
+
+    root = ET.Element("BankStatement")
+    root.set("source", input_path.name)
+    root.set("extractedAt", datetime.now().isoformat())
+
+    first_text = pages_data[0]["text"] if pages_data else ""
+    account_el = ET.SubElement(root, "AccountInfo")
+    
+    # Standard patterns from the skill
+    patterns = [
+        ("AccountNumber", r'(?:account\s*(?:number|no\.?|#))\s*[:\-]?\s*(\d[\d\s\-*X]+)'),
+        ("StatementPeriod", r'(?:statement\s*period|period)\s*[:\-]?\s*([^\n]{5,40})'),
+        ("AccountHolder",   r'(?:name|account\s*holder)\s*[:\-]?\s*([A-Z][^\n]{2,50})'),
+        ("IBAN",            r'\b([A-Z]{2}\d{2}[A-Z0-9]{4,30})\b'),
+        ("Currency",        r'\b(USD|EUR|GBP|SAR|AED|EGP|KWD|BHD|QAR|OMR|JOD|TND|MAD|KES)\b'),
+    ]
+    
+    for label, pat in patterns:
+        m = re.search(pat, first_text, re.IGNORECASE)
+        if m: ET.SubElement(account_el, label).text = m.group(1).strip()
+
+    summary_el = ET.SubElement(root, "Summary")
+    summary_pats = [
+        ("OpeningBalance", r'(?:opening|beginning|prev(?:ious)?)\s*balance\s*[:\-]?\s*([\d,\.]+)'),
+        ("ClosingBalance", r'(?:closing|ending|current)\s*balance\s*[:\-]?\s*([\d,\.]+)'),
+        ("TotalCredits",   r'total\s*credits?\s*[:\-]?\s*([\d,\.]+)'),
+        ("TotalDebits",    r'total\s*debits?\s*[:\-]?\s*([\d,\.]+)'),
+    ]
+    for label, pat in summary_pats:
+        for page in pages_data:
+            m = re.search(pat, page["text"], re.IGNORECASE)
+            if m:
+                ET.SubElement(summary_el, label).text = m.group(1).strip()
+                break
+
+    transactions_el = ET.SubElement(root, "Transactions")
+    txn_count = 0
+    for page in pages_data:
+        for table in page["tables"]:
+            if not table or len(table) < 2: continue
+            header = [str(h).lower().strip() for h in table[0]]
+            col_map = {}
+            for i, h in enumerate(header):
+                if any(k in h for k in ["date", "dt", "value date"]): col_map["date"] = i
+                elif any(k in h for k in ["description", "narration", "detail", "particulars", "reference"]): col_map["description"] = i
+                elif any(k in h for k in ["debit", "withdrawal", "dr"]): col_map["debit"] = i
+                elif any(k in h for k in ["credit", "deposit", "cr"]): col_map["credit"] = i
+                elif any(k in h for k in ["balance"]): col_map["balance"] = i
+                elif "amount" in h and "debit" not in col_map and "credit" not in col_map: col_map["amount"] = i
+
+            for row in table[1:]:
+                if not any(row): continue
+                txn_count += 1
+                txn_el = ET.SubElement(transactions_el, "Transaction", id=str(txn_count))
+                for field, idx in col_map.items():
+                    if idx < len(row) and row[idx]:
+                        ET.SubElement(txn_el, field.capitalize()).text = str(row[idx]).strip()
+
+    xml_str = minidom.parseString(ET.tostring(root, encoding='unicode')).toprettyxml(indent="  ")
+    output_path.write_text(xml_str, encoding="utf-8")
+    return xml_str, None
+
+
+def pdf_to_json(
+    input_path: Path,
+    output_path: Path,
+    pages: list[int] | None = None,
+    password: str | None = None,
+) -> tuple[dict | None, str | None]:
+    """Convert PDF data (text and tables) to structured JSON."""
+    import pdfplumber
+    import json
+
+    data = {"source": input_path.name, "pages": []}
+    kwargs = {"password": password} if password else {}
+
+    with pdfplumber.open(input_path, **kwargs) as pdf:
+        page_range = pages if pages else range(len(pdf.pages))
+        for i in page_range:
+            if i < 0 or i >= len(pdf.pages): continue
+            page = pdf.pages[i]
+            data["pages"].append({
+                "page": i + 1,
+                "text": page.extract_text() or "",
+                "tables": page.extract_tables() or []
+            })
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    
+    return data, None
 
 
 def excel_to_pdf(input_path: Path, output_path: Path) -> None:
